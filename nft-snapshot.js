@@ -8,6 +8,7 @@ import ethers from 'ethers';
 import fs from 'fs';
 import csvWriter from 'csv-writer';
 import moment from 'moment';
+import { getAccountPath } from 'ethers/lib/utils';
 const createCsvWriter = csvWriter.createObjectCsvWriter;
 
 const PROVIDER_ENDPOINT = process.env.PROVIDER_ENDPOINT; // SEE README
@@ -500,5 +501,85 @@ yargs(hideBin(process.argv))
         });
     }
 )
+.command(
+    'cache',
+    'uploads automated results into database',
+    {
+        ['path']: {
+            alias: 'p',
+            desc: 'The path to the data json',
+            required: true,
+        }
+    },
+    async (args) => {
+        const data = JSON.parse(fs.readFileSync(args.path, { encoding: 'utf-8'}));
+        const collections = Object.keys(data);
+        // TODO diff and update collections, tokens, owners and token owners
+        await updateCollections(data);
+
+        const tokens = collections.reduce((acc, collection) => {
+            const tokens = data[collection];
+            acc.push(...tokens.map(t => ({
+                
+            }))) 
+        }, [])
+    }
+)
 .help()
 .argv;
+
+async function updateCollections(collections) {
+    const cachedCollections = await getCachedCollections();
+}
+
+async function getCachedCollections() {
+    return await authenticateApiReq('collections');
+}
+
+async function addCollection(name, address) {
+    return await authenticateApiReq('collecitons', 'POST', {name, address});
+}
+
+async function getCachedTokens() {
+    return await authenticateApiReq('tokens');
+}
+
+async function addToken(collectionId, index) {
+    return await authenticateApiReq('collecitons', 'POST', {collectionId, index});
+}
+
+async function getCachedOwners() {
+    return await authenticateApiReq('owners');
+}
+
+async function addOwner(address) {
+    return await authenticateApiReq(`owners/${address}`, 'POST');
+}
+
+async function deleteOwner(id) {
+    await authenticateApiReq(`owners/${id}`, 'DELETE');
+}
+
+async function getCachedOwnerTokens() {
+    return await authenticateApiReq('ownerTokens');
+}
+
+async function addOwnerToken(address) {
+    return await authenticateApiReq('ownerTokens', 'POST', { ownerId, tokenId });
+}
+
+async function deleteOwnerToken(id) {
+    await authenticateApiReq(`ownerTokens/${id}`, 'DELETE', { ownerId, tokenId });
+}
+
+async function authenticateApiReq(resourceUri, method = "GET", body = undefined) {
+    const url = `${process.env.API_URL}/${resourceUri}`;
+    const headers = {
+        ['X-API-KEY']: process.env.API_KEY,
+    };
+    const response = await fetch(url, { headers, method, body });
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+    return await response.json();
+}
