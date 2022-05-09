@@ -4,7 +4,7 @@
   "description": "A script to scrape owners of a given NFT for a snapshot.",
   "main": "./src/index.js",
   "bin": {
-    "nftsnap": "./src/index.js"
+    "nftsnap": "./src/cli.js"
   },
   "type": "module",
   "scripts": {
