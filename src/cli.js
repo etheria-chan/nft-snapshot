@@ -159,29 +159,5 @@ yargs(hideBin(process.argv))
         });
     }
 )
-.command(
-    'cache',
-    'uploads automated results into database',
-    {
-        ['path']: {
-            alias: 'p',
-            desc: 'The path to the data json',
-            required: true,
-        }
-    },
-    async (args) => {
-        const data = JSON.parse(fs.readFileSync(args.path, { encoding: 'utf-8'}));
-        const collections = Object.keys(data);
-        // TODO diff and update collections, tokens, owners and token owners
-        //await updateCollections(data);
-
-        // const tokens = collections.reduce((acc, collection) => {
-        //     const tokens = data[collection];
-        //     acc.push(...tokens.map(t => ({
-                
-        //     }))) 
-        // }, [])
-    }
-)
 .help()
 .argv;
