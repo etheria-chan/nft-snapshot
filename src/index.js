@@ -515,14 +515,14 @@ yargs(hideBin(process.argv))
         const data = JSON.parse(fs.readFileSync(args.path, { encoding: 'utf-8'}));
         const collections = Object.keys(data);
         // TODO diff and update collections, tokens, owners and token owners
-        await updateCollections(data);
+        //await updateCollections(data);
 
-        const tokens = collections.reduce((acc, collection) => {
-            const tokens = data[collection];
-            acc.push(...tokens.map(t => ({
+        // const tokens = collections.reduce((acc, collection) => {
+        //     const tokens = data[collection];
+        //     acc.push(...tokens.map(t => ({
                 
-            }))) 
-        }, [])
+        //     }))) 
+        // }, [])
     }
 )
 .help()
@@ -530,6 +530,7 @@ yargs(hideBin(process.argv))
 
 async function updateCollections(collections) {
     const cachedCollections = await getCachedCollections();
+    
 }
 
 async function getCachedCollections() {
@@ -560,15 +561,15 @@ async function deleteOwner(id) {
     await authenticateApiReq(`owners/${id}`, 'DELETE');
 }
 
-async function getCachedOwnerTokens() {
+async function getCachedtokenOwners() {
     return await authenticateApiReq('ownerTokens');
 }
 
-async function addOwnerToken(address) {
+async function addtokenOwner(address) {
     return await authenticateApiReq('ownerTokens', 'POST', { ownerId, tokenId });
 }
 
-async function deleteOwnerToken(id) {
+async function deleteTokenOwner(id) {
     await authenticateApiReq(`ownerTokens/${id}`, 'DELETE', { ownerId, tokenId });
 }
 
