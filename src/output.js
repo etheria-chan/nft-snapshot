@@ -23,7 +23,7 @@ async function writeOwnerByTokenId(name, assets) {
     const ownerByTokenIdWriter = createCsvWriter({
         path: `out/${name}.csv`,
         header: [
-            {id: 'id', title: 'ID'},
+            {id: 'id', title: 'Token ID'},
             {id: 'owner', title: 'Owner'},
         ]
     });
@@ -41,7 +41,7 @@ async function writeTokensByOwner(name, assets) {
         header: [
             {id: 'address', title: 'Address'},
             {id: 'count', title: 'Count'},
-            {id: 'ids', title: 'IDs'},
+            {id: 'ids', title: 'Token IDs'},
         ]
     });
 

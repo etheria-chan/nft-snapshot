@@ -11,31 +11,31 @@ const MORALIS_TOKEN=process.env.MORALIS_TOKEN;
 //     name: string,
 //     address: string,
 //     include: number[]?
-//     startIndex: number?,
-//     endIndex: number?,
+//     startId: number?,
+//     endId: number?,
 // }
 export async function getErc1155Assets(options) {
     const assets = [];
 
     if (options.include) {
-        for (const index of options.include) {
+        for (const tokenId of options.include) {
             await setTimeoutAsync(300);
             try {
-                const owners = await getErc1155Owners(options.address, index);
+                const owners = await getErc1155Owners(options.address, tokenId);
                 assets.push(...owners);
             } catch (err) {
-                console.log(`auto-detected end of collection at index ${id-1}.`);
+                console.log(`auto-detected end of collection at index ${tokenId-1}.`);
                 break;
             }
         }
     } else {
-        for (let index = (options.startIndex ?? 1); index <= (options.endIndex ?? 20000); index++) {
+        for (let tokenId = (options.startId ?? 1); tokenId <= (options.endId ?? 20000); tokenId++) {
             await setTimeoutAsync(300);
             try {
-                const owners = await getErc1155Owners(options.address, index);
+                const owners = await getErc1155Owners(options.address, tokenId);
                 assets.push(...owners);
             } catch (err) {
-                console.log(`auto-detected end of collection at index ${index-1}.`);
+                console.log(`auto-detected end of collection at index ${tokenId-1}.`);
                 break;
             }
         }
@@ -47,9 +47,9 @@ export async function getErc1155Assets(options) {
     };
 }
 
-async function getErc1155Owners(address, index) {
-    console.log(`Getting data for ${index}...`);
-    const url = `https://deep-index.moralis.io/api/v2/nft/${address}/${index}/owners?chain=eth&format=decimal`;
+async function getErc1155Owners(address, tokenId) {
+    console.log(`Getting data for ${tokenId}...`);
+    const url = `https://deep-index.moralis.io/api/v2/nft/${address}/${tokenId}/owners?chain=eth&format=decimal`;
     const headers = {
         'Accept': 'application/json',
         'X-API-KEY': MORALIS_TOKEN,
@@ -61,7 +61,7 @@ async function getErc1155Owners(address, index) {
     }
     const ownerQuery = await response.json();
     return ownerQuery.result.map(token => ({
-        index,
+        id: tokenId,
         owner: token.owner_of   
     }));
 }

@@ -15,13 +15,13 @@ export async function getOpenseaAssets(options) {
     const osAssets = await getOpenseaAssetsInCollection(options.name);
         
     if (options.include) {
-        for (const index of options.include) {
+        for (const tokenId of options.include) {
             try {
-                const asset = osAssets.find(a => a.token_id === index);
+                const asset = osAssets.find(a => a.token_id === tokenId);
                 if (asset) {
                     assets.push(await getOpenseaOwner(asset));
                 } else {
-                    throw new Error(`Could not find an asset for index ${index}`);
+                    throw new Error(`Could not find an asset for token ID ${tokenId}`);
                 }
             } catch (err) {
                 console.error(err);

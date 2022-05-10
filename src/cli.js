@@ -38,15 +38,15 @@ yargs(hideBin(process.argv))
             type: 'string',
             required: true,
         },
-        ['startIndex']: {
+        ['startId']: {
             alias: 's',
-            desc: 'start index (numeric) for the collection',
+            desc: 'start tokenId (numeric) for the collection',
             type: 'number',
             default: 1,
         },
-        ['endIndex']: {
+        ['endId']: {
             alias: 'e',
-            desc: 'end index (numeric) for the collection',
+            desc: 'end tokenId (numeric, inclusive) for the collection',
             type: 'number',
             default: 20000,
         },
@@ -56,8 +56,8 @@ yargs(hideBin(process.argv))
             const output = await getErc721Assets({
                 name: args.name,
                 address: args.address,
-                startIndex: +args.startIndex, 
-                endIndex: +args.endIndex
+                startId: args.startId && +args.startId, 
+                endId: args.endId && +args.endId
             });
             await writeAssets(output, args.format);
         });
@@ -79,15 +79,15 @@ yargs(hideBin(process.argv))
             type: 'string',
             required: true,
         },
-        ['startIndex']: {
+        ['startId']: {
             alias: 's',
-            desc: 'start index (numeric) for the collection',
+            desc: 'start tokenId (numeric) for the collection',
             type: 'number',
             default: 1,
         },
-        ['endIndex']: {
+        ['endId']: {
             alias: 'e',
-            desc: 'end index (numeric) for the collection',
+            desc: 'end tokenId (numeric, inclusive) for the collection',
             type: 'number',
             default: 20000,
         },
@@ -97,8 +97,8 @@ yargs(hideBin(process.argv))
             const output = await getErc1155Assets({
                 name: args.name,
                 address: args.address,
-                startIndex: +args.startIndex, 
-                endIndex: +args.endIndex
+                startId: args.startId && +args.startId, 
+                endId: args.endId && +args.endId
             });
             await writeAssets(output, args.format);
         });

@@ -16,34 +16,34 @@ function getContract(address) {
 //     name: string,
 //     address: string,
 //     include: number[]?
-//     startIndex: number?,
-//     endIndex: number?,
+//     startId: number?,
+//     endId: number?,
 // }
 export async function getErc721Assets(options) {
     const contract = getContract(options.address);
     const assets = [];
 
     if (options.include) {
-        for (const index of options.include) {
+        for (const tokenId of options.include) {
             try {
-                assets.push(await getErc721Owner(contract, index));
+                assets.push(await getErc721Owner(contract, tokenId));
             } catch(err) {
-                console.error(`Token ${id} Error:`);
+                console.error(`Token ${tokenId} Error:`);
                 console.error(err.reason);
                 continue;
             }
         }
     } else {
-        for (let index = (options.startIndex ?? 1); index <= (options.endIndex ?? 20000); index++) {
+        for (let tokenId = (options.startId ?? 1); tokenId <= (options.endId ?? 20000); tokenId++) {
             try {
-                assets.push(await getErc721Owner(contract, index));
+                assets.push(await getErc721Owner(contract, tokenId));
                 
             } catch (err) {
                 if (err && err.reason && err.reason.includes('nonexistent token')) {
-                    console.log(`auto-detected end of collection at index ${index-1}.`);
+                    console.log(`auto-detected end of collection at token ${tokenId-1}.`);
                     break;
                 } else {
-                    console.error(`Token ${index} Error:`);
+                    console.error(`Token ${tokenId} Error:`);
                     console.error(err.reason);
                     continue;
                 }
@@ -57,10 +57,10 @@ export async function getErc721Assets(options) {
     };
 }
 
-async function getErc721Owner(contract, index) {
-    console.log(`Getting data for ${index}...`);
+async function getErc721Owner(contract, tokenId) {
+    console.log(`Getting data for ${tokenId}...`);
     return {
-        id: index,
-        owner: await contract.ownerOf(index),
+        id: tokenId,
+        owner: await contract.ownerOf(tokenId),
     }
 }
